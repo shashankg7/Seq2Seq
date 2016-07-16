@@ -45,7 +45,6 @@ class preprocess(object):
         for ind, seq in enumerate(zip(text_seq, text_seq1)):
             if len(seq[0]) !=0 and len(seq[1]) !=0:
                 nonzero_ind.append(ind)
-
         #nonzero_ind = [ind for ind, seq in enumerate(zip(text_seq, text_seq1)) if len(seq[0]) != 0 and len(seq[1]) != 0]
 
         text_seq_Y = [text_seq1[i] for i in nonzero_ind]
@@ -99,8 +98,8 @@ class preprocess(object):
 
                 for ind1 in xrange(len(temp) + 1, self.max_len + 2):
                     Y[ind, ind1, self.vocab_en["</s>"]] = 1
-
-            return X, Y
+        #pdb.set_trace()
+        return X, Y
 
 
     def gen_batch(self, batch_size=32):
@@ -126,4 +125,4 @@ if __name__ == "__main__":
     pre.preprocess()
     for X,Y in pre.gen_batch():
         print X.shape, Y.shape
-    pdb.set_trace()
+        pdb.set_trace()
