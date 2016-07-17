@@ -37,8 +37,6 @@ class preprocess(object):
         self.vocab_hind["</s>"] = self.max_feat + 2
         text1 = self.tokenizer.texts_to_sequences(self.text_eng)
         text2 = self.tokenizer1.texts_to_sequences(self.text_hindi)
-        print text1[:6]
-        print text2[:6]
 
     def gen_seq(self, text_seq, text_seq1):
         nonzero_ind = []
