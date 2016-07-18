@@ -76,16 +76,16 @@ class seq2seq(object):
         print("Input sequence read, starting training")
 
         model = Sequential()
-        model.add(Embedding(self.vocab_size + 3, 300))
-        model.add(RNN(300, return_sequences=True))#, input_shape=(100, 128)))
+        model.add(Embedding(self.vocab_size + 3, 100))
+        model.add(RNN(100, return_sequences=True))#, input_shape=(100, 128)))
 
         model.add(Dropout(0.25))
-        model.add(RNN(300))
+        model.add(RNN(100))
         model.add(RepeatVector(self.maxlen + 2))
-        model.add(RNN(300, return_sequences=True))
+        model.add(RNN(100, return_sequences=True))
 
         model.add(Dropout(0.25))
-        model.add(RNN(300, return_sequences=True))
+        model.add(RNN(100, return_sequences=True))
 
         model.add(TimeDistributedDense(self.vocab_size + 3))
         model.add(Dropout(0.5))
@@ -93,13 +93,13 @@ class seq2seq(object):
 
         model.compile(loss='categorical_crossentropy', optimizer='adam',
                       metrics=['accuracy'])
-        for e in range(100):
+        for e in range(10000):
             print("epoch %d" % e)
             for ind, (X,Y) in enumerate(self.proproces.gen_batch()):
                 loss, acc = model.train_on_batch(X, Y)#, batch_size=64, nb_epoch=1)
                 #print("Loss is %f, accuracy is %f " % (loss, acc), end='\r')
                 # After one epoch test one sentence
-                if ind % 5 == 0 :
+                if ind % 100 == 0 :
                     testX = X[0,:].reshape(1, self.maxlen + 2)
                     testY = Y[0]
                     pred = model.predict(testX, batch_size=1)
