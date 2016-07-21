@@ -30,7 +30,8 @@ def batch_gen(batch_size=32, seq_len=10, max_no=100):
                 y[ind, j, elem] = 1
 
         yield x, y
-
+        x.fill(0.0)
+        y.fill(0.0)
 
 if __name__ == "__main__":
     for X,Y in batch_gen():
