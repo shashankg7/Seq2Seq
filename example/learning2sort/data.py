@@ -4,12 +4,12 @@ from keras.preprocessing.text import one_hot
 import pdb
 
 
-def encode(X,seq_len, max_no, vocab_size):
+def encode(X,seq_len, vocab_size):
     x = np.zeros((len(X),seq_len, vocab_size), dtype=np.float32)
     for ind,batch in enumerate(X):
         for j, elem in enumerate(batch):
             x[ind, j, elem] = 1
-
+    return x
 
 def batch_gen(batch_size=32, seq_len=10, max_no=100):
     # Randomly generate a batch of integer sequences (X) and its sorted
