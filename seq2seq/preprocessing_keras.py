@@ -4,6 +4,8 @@ from keras.preprocessing.sequence import pad_sequences
 import codecs
 import pdb
 import numpy as np
+from utils import preprocess_text, text2seq_generator
+
 
 class preprocess(object):
     # Preprocessing for hindi to english
@@ -17,26 +19,8 @@ class preprocess(object):
         self.truncate = truncate
 
     def preprocess(self):
-        # Preprocessing hindi corpus
-
-        self.text_hindi =[line.rstrip() for line in open(self.path_hindi).readlines()]
-        #self.text_eng = [line.rstrip() for line in codecs.open(self.path_eng, encoding='utf-8').readlines()]
-        self.text_eng = [line.rstrip() for line in open(self.path_eng).readlines()]
-
-        self.tokenizer = Tokenizer(self.max_feat)
-        self.tokenizer.fit_on_texts(self.text_eng)
-        self.vocab_en = self.tokenizer.word_index
-        self.vocab_en["UNK"] = self.max_feat
-        self.vocab_en["<s>"] = self.max_feat + 1
-        self.vocab_en["</s>"] = self.max_feat + 2
-        self.tokenizer1 = Tokenizer(self.max_feat)
-        self.tokenizer1.fit_on_texts(self.text_hindi)
-        self.vocab_hind = self.tokenizer1.word_index
-        self.vocab_hind["UNK"] = self.max_feat
-        self.vocab_hind["<s>"] = self.max_feat + 1
-        self.vocab_hind["</s>"] = self.max_feat + 2
-        text1 = self.tokenizer.texts_to_sequences(self.text_eng)
-        text2 = self.tokenizer1.texts_to_sequences(self.text_hindi)
+        # Preprocessing source and target text sequence files
+        self.vocab_en, self.vocab_hind, self.sents_src, self.sents_tar = preprocess_text(self.path_eng, self.path_hindi, self.max_feat)
 
     def gen_seq(self, text_seq, text_seq1):
         nonzero_ind = []
@@ -104,23 +88,24 @@ class preprocess(object):
         i = 0
         text_seq = []
         text_seq1 = []
-        for text1, text2 in zip(self.tokenizer.texts_to_sequences_generator(self.text_eng), self.tokenizer1.texts_to_sequences_generator(self.text_hindi)):
+        for text1, text2 in text2seq_generator(self.vocab_en, self.vocab_hind, self.sents_src, self.sents_tar):
+            text_seq.append(text1)
+            text_seq1.append(text2)
+            i += 1
             if i == batch_size:
                 X, Y = self.gen_seq(text_seq, text_seq1)
                 text_seq = []
                 text_seq1 = []
                 i = 0
                 yield X, Y
-            text_seq.append(text1)
-            text_seq1.append(text2)
-            i += 1
                 #pdb.set_trace()
 
 
-
 if __name__ == "__main__":
-    pre = preprocess('../indian-parallel-corpora/hi-en/tok/training.hi-en.hi', '../indian-parallel-corpora/hi-en/tok/training.hi-en.en', 5000, 50)
+    pre = preprocess('../data/training.hi-en.hi', '../data/training.hi-en.en', 5500, 15)
     pre.preprocess()
-    for X,Y in pre.gen_batch():
-        print X.shape, Y.shape
-        pdb.set_trace()
+    for e in xrange(1):
+        print("epoch no %d"%e)
+        for X,Y in pre.gen_batch():
+            print X
+        #continue

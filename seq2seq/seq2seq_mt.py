@@ -1,22 +1,17 @@
 
 from __future__ import print_function
-from keras.preprocessing import sequence
-from keras.models import Sequential
-from keras.layers.core import Activation, RepeatVector, TimeDistributedDense, Dropout, Dense
-from keras.layers import recurrent
-from keras.layers.embeddings import Embedding
 import numpy as np
 from preprocessing_keras import preprocess
+from model import seq2seq
 import pdb
-RNN = recurrent.LSTM
 
-class seq2seq(object):
+class train(object):
     # Train a sequence to sequence model for hindi to english translation
     def __init__(self, maxlen, vocab_size):
         self.maxlen = maxlen
         self.vocab_size = vocab_size
-        self.proproces = preprocess("../indian-parallel-corpora/hi-en/tok/training.hi-en.hi",
-                           "../indian-parallel-corpora/hi-en/tok/training.hi-en.en", vocab_size, maxlen)
+        self.proproces = preprocess("../data/training.hi-en.hi",
+                           "../data/training.hi-en.en", vocab_size, maxlen)
         self.proproces.preprocess()
         self.vocab_en_rev = {v:k for k,v in self.proproces.vocab_en.items()}
         self.vocab_hind_rev = {v:k for k,v in self.proproces.vocab_hind.items()}
@@ -74,32 +69,16 @@ class seq2seq(object):
 
     def train_seq2seq(self):
         print("Input sequence read, starting training")
-
-        model = Sequential()
-        model.add(Embedding(self.vocab_size + 3, 100))
-        model.add(RNN(100, return_sequences=True))#, input_shape=(100, 128)))
-
-        model.add(Dropout(0.25))
-        model.add(RNN(100))
-        model.add(RepeatVector(self.maxlen + 2))
-        model.add(RNN(100, return_sequences=True))
-
-        model.add(Dropout(0.25))
-        model.add(RNN(100, return_sequences=True))
-
-        model.add(TimeDistributedDense(self.vocab_size + 3))
-        model.add(Dropout(0.5))
-        model.add(Activation('softmax'))
-
-        model.compile(loss='categorical_crossentropy', optimizer='adam',
-                      metrics=['accuracy'])
-        for e in range(10000):
-            print("epoch %d" % e)
+        s2s = seq2seq(self.vocab_size + 3, self.maxlen + 2, \
+                                      self.vocab_size + 3)
+        model = s2s.seq2seq_plain()
+        for e in range(100):
+            print("epoch %d \n" % e)
             for ind, (X,Y) in enumerate(self.proproces.gen_batch()):
                 loss, acc = model.train_on_batch(X, Y)#, batch_size=64, nb_epoch=1)
                 #print("Loss is %f, accuracy is %f " % (loss, acc), end='\r')
                 # After one epoch test one sentence
-                if ind % 100 == 0 :
+                if ind % 100 == 0:
                     testX = X[0,:].reshape(1, self.maxlen + 2)
                     testY = Y[0]
                     pred = model.predict(testX, batch_size=1)
@@ -107,5 +86,5 @@ class seq2seq(object):
 
 
 if __name__ == "__main__":
-    seq2seq = seq2seq(15, 5000)
-    seq2seq.train_seq2seq()
+    Seq2seq = train(10, 5000)
+    Seq2seq.train_seq2seq()
