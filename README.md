@@ -4,13 +4,21 @@ A general purpose library for training seq2seq models on a parallel corpus. No e
 
 ## Requirements
 
-# keras
+* keras
 
-# numpy
+* numpy
 
-# theano/tensorflow
+* theano/tensorflow
 
-# CUDA and CuDNN (if using GPU)
+* CUDA and CuDNN (if using GPU)
+
+# TO-DO
+
+* Current parameters hard coded, add argument parser
+
+* Add model saving method
+
+* Add model loading method
 
 
 
