@@ -1,7 +1,7 @@
 
 from __future__ import print_function
 import numpy as np
-from preprocessing_keras import preprocess
+from preprocessing import preprocess
 from model import seq2seq
 import pdb
 
@@ -72,7 +72,7 @@ class train(object):
         s2s = seq2seq(self.vocab_size + 3, self.maxlen + 2, \
                                       self.vocab_size + 3)
         model = s2s.seq2seq_plain()
-        for e in range(100):
+        for e in range(10000):
             print("epoch %d \n" % e)
             for ind, (X,Y) in enumerate(self.proproces.gen_batch()):
                 loss, acc = model.train_on_batch(X, Y)#, batch_size=64, nb_epoch=1)
@@ -86,5 +86,5 @@ class train(object):
 
 
 if __name__ == "__main__":
-    Seq2seq = train(10, 5000)
+    Seq2seq = train(10, 4000)
     Seq2seq.train_seq2seq()

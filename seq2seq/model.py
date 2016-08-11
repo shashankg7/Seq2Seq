@@ -10,10 +10,11 @@ from preprocessing_keras import preprocess
 import pdb
 RNN = recurrent.LSTM
 
+# This file has definitions of different seq2seq models (plain seq2seq, attention based seq2seq)
 class seq2seq(object):
-    # Definitions of various seq2seq models
+    # Initialize model parameters
     def __init__(self, input_size, seqlen, output_size, input_dim = 100, \
-                 hidden_dim = 100):
+                 hidden_dim = 200):
         self.maxlen = seqlen
         self.input_size = input_size
         self.output_size = output_size
@@ -21,7 +22,7 @@ class seq2seq(object):
         self.hidden_dim = hidden_dim
 
     def seq2seq_plain(self):
-
+        # Plain seq2seq
         model = Sequential()
         model.add(Embedding(self.input_size , self.input_dim))
         model.add(RNN(self.hidden_dim, return_sequences=True))#, input_shape=(100, 128)))
@@ -29,9 +30,8 @@ class seq2seq(object):
         model.add(Dropout(0.25))
         model.add(RNN(self.hidden_dim))
         model.add(RepeatVector(self.maxlen))
-        model.add(RNN(self.hidden_dim, return_sequences=True))
-
-        model.add(Dropout(0.25))
+        #model.add(RNN(self.hidden_dim, return_sequences=True))
+        #model.add(Dropout(0.25))
         model.add(RNN(self.hidden_dim, return_sequences=True))
 
         model.add(TimeDistributedDense(self.output_size))
@@ -47,5 +47,6 @@ class seq2seq(object):
 
 
 if __name__ == "__main__":
+    # Test the model 
     seq2seq = seq2seq(15, 5500)
     seq2seq.train_seq2seq()
