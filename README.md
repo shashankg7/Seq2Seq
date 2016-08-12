@@ -12,6 +12,26 @@ A general purpose library for training seq2seq models on a parallel corpus. No e
 
 * CUDA and CuDNN (if using GPU)
 
+## Example on Machine Translation
+
+On Machine Translation task (translation from English to Hindi), after ~1000 epochs of training (less training data) it was giving following results:
+
+nepal   external        ministry       
+ नेपाली   विदेश    UNK     
+
+
+ramayana        is      an      extraordinary   epic    poetry  written by      poet    valmiki 
+ रामायण  कवि     वाल्मीकि द्वारा   लिखा    गया     संस्कृत    का      एक      अनुपम    
+
+
+ he      is      the     first   black   lrb     UNK     rrb     president       
+  वे       इस      देश      के       प्रथम    UNK     -LRB-   अफ्रीकी  UNK     -RRB-   
+
+
+ administrative  divisions       
+ प्रशासनिक        विभाजन  
+
+
 ## TO-DO
 
 * Current parameters hard coded, add argument parser
@@ -19,26 +39,6 @@ A general purpose library for training seq2seq models on a parallel corpus. No e
 * Add model saving method
 
 * Add model loading method
-
-## Example on Machine Translation
-
-On Machine Translation task (translation from English to Hindi), after ~1000 epochs of training (less training data) it was giving following results:
-
-<s>     nepal   external        ministry        </s>    </s>    </s>    </s>    </s>    </s>    </s>    </s>
-<s>     नेपाली   विदेश    UNK     </s>    </s>    </s>    </s>    </s>    </s>    </s>    </s>
-
-
-<s>     ramayana        is      an      extraordinary   epic    poetry  written by      poet    valmiki </s>
-<s>     रामायण  कवि     वाल्मीकि द्वारा   लिखा    गया     संस्कृत    का      एक      अनुपम    </s>
-
-
-<s>     he      is      the     first   black   lrb     UNK     rrb     president       </s>    </s>
-<s>     वे       इस      देश      के       प्रथम    UNK     -LRB-   अफ्रीकी  UNK     -RRB-   </s>
-
-
-<s>     administrative  divisions       </s>    </s>    </s>    </s>    </s>    </s>    </s>    </s>    </s>
-<s>     प्रशासनिक        विभाजन  </s>    </s>    </s>    </s>    </s>    </s>    </s>    </s>    </s>
-
 
 
 
