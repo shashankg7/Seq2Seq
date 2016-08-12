@@ -13,8 +13,8 @@ class train(object):
         self.proproces = preprocess("../data/training.hi-en.hi",
                            "../data/training.hi-en.en", vocab_size, maxlen)
         self.proproces.preprocess()
-        self.vocab_en_rev = {v:k for k,v in self.proproces.vocab_en.items()}
-        self.vocab_hind_rev = {v:k for k,v in self.proproces.vocab_hind.items()}
+        self.vocab_src_rev = {v:k for k,v in self.proproces.vocab_src.items()}
+        self.vocab_tar_rev = {v:k for k,v in self.proproces.vocab_tar.items()}
 
 
     def decode(self, x, y, mode='greedy'):
@@ -24,10 +24,10 @@ class train(object):
             y = np.argmax(y, axis=2)
             x = x.tolist()[0]
             y = y.tolist()[0]
-            vocab_en_rev = self.vocab_en_rev
-            vocab_hind_rev = self.vocab_hind_rev
-            print("\t".join(map(lambda X:vocab_en_rev[X], x)))
-            print("\t".join(map(lambda X:vocab_hind_rev[X], y)))
+            vocab_src_rev = self.vocab_src_rev
+            vocab_tar_rev = self.vocab_tar_rev
+            print("\t".join(map(lambda X:vocab_src_rev[X], x)))
+            print("\t".join(map(lambda X:vocab_tar_rev[X], y)))
             print("\n \n")
 
         elif mode=='viterbi':
@@ -44,11 +44,11 @@ class train(object):
         tokens = inp.split()
         seq = []
         for token in tokens:
-            if token in self.proproces.vocab_hind:
-                seq.append(self.proproces.vocab_hind[token])
+            if token in self.proproces.vocab_tar:
+                seq.append(self.proproces.vocab_tar[token])
             else:
                 token = "UNK"
-                seq.append(self.proproces.vocab_hind[token])
+                seq.append(self.proproces.vocab_tar[token])
         #seq = map(lambda x:self.proproces.vocab_hind[x], tokens)
         # Normalize seq to maxlen
         X = []

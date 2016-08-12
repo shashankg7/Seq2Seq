@@ -6,7 +6,7 @@ from keras.layers.core import Activation, RepeatVector, TimeDistributedDense, Dr
 from keras.layers import recurrent
 from keras.layers.embeddings import Embedding
 import numpy as np
-from preprocessing_keras import preprocess
+from preprocessing import preprocess
 import pdb
 RNN = recurrent.LSTM
 
